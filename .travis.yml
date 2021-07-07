@@ -1,0 +1,32 @@
+language: generic
+
+sudo: required
+services:
+  - docker
+
+before_install:
+  
+  # create images for test(s)
+  - docker build -t cro19/react-client-test -f ./client/Dockerfile.dev ./client
+
+script:
+
+  # test project(s)
+  - docker run -e CI=true cro19/react-client-test npm run test 
+
+after_success:
+  
+  # create production images
+  - docker build -t cro19/multi-client ./client
+  - docker build -t cro19/multi-nginx ./nginx
+  - docker build -t cro19/multi-server ./server
+  - docker build -t cro19/multi-worker ./worker
+  
+  # login in to docker CLI using access token
+  - echo "$DOCKER_PASSWORD" | docker login -u "DOCKER_ID" --password-stdin
+
+  # take those images and push them to docker hub (public)
+  - docker push cro19/multi-client
+  - docker push cro19/multi-nginx
+  - docker push cro19/multi-server
+  - docker push cro19/multi-worker
