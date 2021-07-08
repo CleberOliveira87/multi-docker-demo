@@ -1,3 +1,5 @@
+# for localhost development purposes
+
 version: '3'
 
 services: 

@@ -30,3 +30,15 @@ after_success:
   - docker push cro19/multi-nginx
   - docker push cro19/multi-server
   - docker push cro19/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: "sa-east-1"
+  app: "multi-docker-demo"
+  env: "Multidockerdemo-env"
+  bucket_name: "elasticbeanstalk-sa-east-1-392045542429"
+  bucket_path: "multi-docker-demo"
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
